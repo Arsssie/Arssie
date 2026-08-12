@@ -1,17 +1,21 @@
-import Navbar from "./components/Navbar";
-import Home from "./components/Home";
-import GradientBackground from "./components/GradientBackground";
-import CustomCursor from "./components/Cursor";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./pages/Navbar";
+import Home from "./pages/Home";
+import Project from "./pages/Projects";
 
-function App() {
+import Cursor from "./components/Cursor";
+import ScrollToHash from "./components/ScrolltoHash";
+
+export default function App() {
   return (
     <>
-      <GradientBackground />
-      <CustomCursor />
+      <ScrollToHash />
+      <Cursor />
       <Navbar />
-      <Home />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<Project />} />
+      </Routes>
     </>
   );
 }
-
-export default App;

@@ -1,4 +1,5 @@
 import { useRef, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -99,45 +100,47 @@ export default function Home() {
 
   return (
     <div ref={containerRef} id="home" className="text-neutral-900">
-      <section className="min-h-screen flex flex-col justify-center px-8 md:px-16">
-        <p className="hero-sub text-[#792CA2] font-medium tracking-wide mb-4">
-          Portfolio — Maria Arssiely Del Mundo
-        </p>
+      {/* Hero: centered column with open gutters left/right for moving images */}
+      <section className="min-h-screen flex flex-col items-center justify-center text-center px-8 md:px-16">
+        <div className="w-full max-w-3xl mx-auto flex flex-col items-center">
+          <p className="hero-sub text-[#792CA2] font-medium tracking-wide mb-4">
+            Portfolio — Maria Arssiely Del Mundo
+          </p>
 
-        <h1 className="text-5xl md:text-7xl font-bold leading-[1.05]">
-          <span className="hero-line block">Digital made</span>
-          <span className="hero-line block text-[#443199]">thoughtful.</span>
-          <span className="hero-line block">Products made</span>
-          <span className="hero-line block text-[#C13383]">refreshingly good.</span>
-        </h1>
+          <h1 className="text-5xl md:text-7xl font-bold leading-[1.05]">
+            <span className="hero-line block">Digital made</span>
+            <span className="hero-line block text-[#443199]">thoughtful.</span>
+            <span className="hero-line block">Products made</span>
+            <span className="hero-line block text-[#C13383]">refreshingly good.</span>
+          </h1>
 
-        <DistortText className="hero-sub mt-6 max-w-xl text-neutral-600 text-lg">
-          IT graduate crafting user-centered products as a Product Owner,
-          UI/UX Designer, and Frontend Developer — from Cavite, Philippines.
-        </DistortText>
+          <DistortText className="hero-sub mt-6 max-w-xl mx-auto text-neutral-600 text-lg">
+            IT graduate crafting user-centered products as a Product Owner,
+            UI/UX Designer, and Frontend Developer — from Cavite, Philippines.
+          </DistortText>
 
-        <div className="hero-box mt-10 flex gap-4">
-          <a
-            href="#work"
-            className="bg-[#443199] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#792CA2] transition-colors"
-          >
-            See My Work
-          </a>
-          <a  
-            href="mailto:maria.arssiely.delmundo@gmail.com"
-            className="border border-neutral-300 text-neutral-800 px-6 py-3 rounded-full hover:border-[#E05454] hover:text-[#E05454] transition-colors"
-          >
-            Get in Touch
-          </a>
+          <div className="hero-box mt-10 flex justify-center gap-4">
+            <Link
+              to="/projects"
+              className="bg-[#443199] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#792CA2] transition-colors"
+            >
+              See My Work
+            </Link>
+            <a
+              href="mailto:maria.arssiely.delmundo@gmail.com"
+              className="border border-neutral-300 text-neutral-800 px-6 py-3 rounded-full hover:border-[#E05454] hover:text-[#E05454] transition-colors"
+            >
+              Get in Touch
+            </a>
+          </div>
         </div>
       </section>
 
-      
       <section id="about" className="px-8 md:px-16 py-24 border-t border-neutral-200">
-        <h2 className="text-sm uppercase tracking-widest text-[#792CA2] mb-10">
+        <h2 className="text-sm uppercase tracking-widest text-[#792CA2] mb-10 text-center">
           What I bring
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div className="role-box bg-white/70 backdrop-blur-sm border border-neutral-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-[#443199]/30 transition-all">
             <h3 className="text-2xl font-bold mb-3 text-[#443199]">Product Owner</h3>
             <p className="text-neutral-600">

@@ -18,12 +18,14 @@ export default function Cursor() {
     window.addEventListener("mousemove", move);
 
     const hoverables = document.querySelectorAll("a, button");
-    const grow = () => gsap.to(cursor, { scale: 2.5, duration: 0.3 });
+    const grow = () => gsap.to(cursor, { scale: 2.2, duration: 0.3 });
     const shrink = () => gsap.to(cursor, { scale: 1, duration: 0.3 });
     hoverables.forEach((el) => {
       el.addEventListener("mouseenter", grow);
       el.addEventListener("mouseleave", shrink);
     });
+
+    document.body.style.cursor = "none";
 
     return () => {
       window.removeEventListener("mousemove", move);
@@ -31,13 +33,52 @@ export default function Cursor() {
         el.removeEventListener("mouseenter", grow);
         el.removeEventListener("mouseleave", shrink);
       });
+      document.body.style.cursor = "auto";
     };
   }, []);
 
   return (
-    <div
-      ref={cursorRef}
-      className="hidden md:block fixed top-0 left-0 w-4 h-4 bg-[#443199] rounded-full pointer-events-none z-[9999] opacity-70 -translate-x-1/2 -translate-y-1/2"
-    />
+    <>
+      {/* Same distortion technique as DistortText in Home.tsx, reused for the cursor lens */}
+      <svg width="0" height="0" style={{ position: "fixed" }} aria-hidden="true">
+        <filter id="cursor-glass">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.012 0.02"
+            numOctaves="2"
+            seed="4"
+            result="noise"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="18"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
+
+      <div
+        ref={cursorRef}
+        className="hidden md:block"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: 28,
+          height: 28,
+          borderRadius: "9999px",
+          transform: "translate(-50%, -50%)",
+          pointerEvents: "none",
+          zIndex: 9999,
+          backdropFilter: "url(#cursor-glass) blur(3px) saturate(1.4) contrast(1.05)",
+          WebkitBackdropFilter: "blur(6px) saturate(1.4) contrast(1.05)",
+          border: "1px solid rgba(255,255,255,0.6)",
+          boxShadow:
+            "inset 0 1px 2px rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.15), 0 2px 10px rgba(0,0,0,0.15)",
+        }}
+      />
+    </>
   );
 }
