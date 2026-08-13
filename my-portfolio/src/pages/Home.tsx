@@ -75,8 +75,66 @@ function DistortText({
   );
 }
 
+// --- Project data ---
+interface Project {
+  title: string;
+  description: string;
+  tags: string[];
+  offset?: boolean;
+}
+
+const projects: Project[] = [
+  {
+    title: "Infirmary Management System",
+    description: "Product Owner & Frontend — built for Tagaytay City Science National High School.",
+    tags: ["React", "Product Owner"],
+  },
+  {
+    title: "Appointment Scheduling App",
+    description: "UI/UX design, prototyping, and ReactJS frontend for web & mobile.",
+    tags: ["Figma", "ReactJS"],
+    offset: true,
+  },
+  {
+    title: "Shopping Website",
+    description: "PHP web app with product listing, cart, and CRUD operations.",
+    tags: ["PHP", "MySQL"],
+  },
+  {
+    title: "Intelliseven OJT",
+    description: "Designed and developed responsive web interfaces during internship.",
+    tags: ["React", "UI/UX"],
+    offset: true,
+  },
+];
+
+function ProjectCard({ project }: { project: Project }) {
+  return (
+    <div
+      className={`project-card rounded-3xl p-6 bg-gradient-to-b from-[#792CA2]/90 via-[#C13383]/80 to-[#443199]/90 shadow-lg hover:shadow-2xl transition-shadow ${
+        project.offset ? "md:mt-16" : ""
+      }`}
+    >
+      <div className="w-full aspect-[16/10] rounded-2xl bg-neutral-100/90 mb-5" />
+      <h3 className="text-white font-semibold text-lg mb-1">{project.title}</h3>
+      <p className="text-white/80 text-sm mb-4">{project.description}</p>
+      <div className="flex gap-2 flex-wrap">
+        {project.tags.map((tag) => (
+          <span
+            key={tag}
+            className="text-xs text-white/90 bg-white/15 px-3 py-1 rounded-full"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -85,15 +143,67 @@ export default function Home() {
         .from(".hero-sub", { opacity: 0, y: 20, duration: 0.6 }, "-=0.4")
         .from(".hero-box", { opacity: 0, scale: 0.9, duration: 0.6 }, "-=0.3");
 
-      gsap.utils.toArray<HTMLElement>(".role-box").forEach((box, i) => {
-        gsap.from(box, {
-          opacity: 0,
-          y: 40,
-          duration: 0.7,
-          delay: 0.1 * i,
-          scrollTrigger: { trigger: box, start: "top 85%" },
-        });
+      // Slide in from right, then vanish to the left as you scroll past
+      gsap.utils.toArray<HTMLElement>(".role-box").forEach((box) => {
+        gsap.fromTo(
+          box,
+          { opacity: 0, x: 150 },
+          {
+            opacity: 1,
+            x: 0,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: box,
+              start: "top 90%",
+              end: "top 55%",
+              scrub: 0.6,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          box,
+          { opacity: 1, x: 0 },
+          {
+            opacity: 0,
+            x: -150,
+            ease: "power2.in",
+            scrollTrigger: {
+              trigger: box,
+              start: "top 35%",
+              end: "top -10%",
+              scrub: 0.6,
+            },
+          }
+        );
       });
+
+      // --- Projects section: PIN in place, cards reveal while pinned ---
+      if (projectsSectionRef.current) {
+        const cards = gsap.utils.toArray<HTMLElement>(".project-card");
+
+        // Set initial hidden state
+        gsap.set(cards, { opacity: 0, y: 60, scale: 0.95 });
+
+        const pinTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: projectsSectionRef.current,
+            start: "top top",
+            end: "+=100%", // how long the section stays pinned; increase for a slower reveal
+            scrub: 0.6,
+            pin: true,
+            anticipatePin: 1,
+          },
+        });
+
+        pinTl.to(cards, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          stagger: 0.25,
+          ease: "power2.out",
+        });
+      }
     },
     { scope: containerRef }
   );
@@ -161,6 +271,33 @@ export default function Home() {
               React, TypeScript, and responsive builds that turn designs
               into fast, functioning products.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* PROJECTS PREVIEW — pinned while cards reveal */}
+      <section
+        ref={projectsSectionRef}
+        id="work"
+        className="px-8 md:px-16 py-24 border-t border-neutral-200 min-h-screen flex items-center"
+      >
+        <div className="max-w-5xl mx-auto w-full">
+          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+            <h2 className="text-sm uppercase tracking-widest text-[#792CA2]">
+              Selected Work
+            </h2>
+            <Link
+              to="/projects"
+              className="text-sm font-medium text-[#443199] hover:text-[#792CA2] transition-colors"
+            >
+              View all projects →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {projects.map((project) => (
+              <ProjectCard key={project.title} project={project} />
+            ))}
           </div>
         </div>
       </section>
