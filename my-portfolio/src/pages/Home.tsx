@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import capstoneImg from "../assets/capstone.png";
+import i7Img from "../assets/i7.png";
+import loginImg from "../assets/login.svg";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// --- Distortion wrapper  ---
 interface DistortTextProps {
   children: ReactNode;
   className?: string;
@@ -75,25 +77,27 @@ function DistortText({
   );
 }
 
-// --- Project data ---
+
 interface Project {
   title: string;
   description: string;
   tags: string[];
   offset?: boolean;
+  image?: string;
 }
-
-const projects: Project[] = [
+  const projects: Project[] = [
   {
     title: "Infirmary Management System",
     description: "Product Owner & Frontend — built for Tagaytay City Science National High School.",
     tags: ["React", "Product Owner"],
+    image: loginImg,
   },
   {
     title: "Appointment Scheduling App",
     description: "UI/UX design, prototyping, and ReactJS frontend for web & mobile.",
     tags: ["Figma", "ReactJS"],
     offset: true,
+    image: capstoneImg,
   },
   {
     title: "Shopping Website",
@@ -105,6 +109,7 @@ const projects: Project[] = [
     description: "Designed and developed responsive web interfaces during internship.",
     tags: ["React", "UI/UX"],
     offset: true,
+    image: i7Img,
   },
 ];
 
@@ -115,7 +120,15 @@ function ProjectCard({ project }: { project: Project }) {
         project.offset ? "md:mt-16" : ""
       }`}
     >
-      <div className="w-full aspect-[16/10] rounded-2xl bg-neutral-100/90 mb-5" />
+      {project.image ? (
+        <img
+          src={project.image}
+          alt={project.title}
+          className="w-full aspect-[16/10] rounded-2xl object-cover mb-5"
+        />
+      ) : (
+        <div className="w-full aspect-[16/10] rounded-2xl bg-neutral-100/90 mb-5" />
+      )}
       <h3 className="text-white font-semibold text-lg mb-1">{project.title}</h3>
       <p className="text-white/80 text-sm mb-4">{project.description}</p>
       <div className="flex gap-2 flex-wrap">
@@ -178,18 +191,17 @@ export default function Home() {
         );
       });
 
-      // --- Projects section: PIN in place, cards reveal while pinned ---
+
       if (projectsSectionRef.current) {
         const cards = gsap.utils.toArray<HTMLElement>(".project-card");
 
-        // Set initial hidden state
         gsap.set(cards, { opacity: 0, y: 60, scale: 0.95 });
 
         const pinTl = gsap.timeline({
           scrollTrigger: {
             trigger: projectsSectionRef.current,
             start: "top top",
-            end: "+=100%", // how long the section stays pinned; increase for a slower reveal
+            end: "+=100%",
             scrub: 0.6,
             pin: true,
             anticipatePin: 1,
@@ -210,7 +222,6 @@ export default function Home() {
 
   return (
     <div ref={containerRef} id="home" className="text-neutral-900">
-      {/* Hero: centered column with open gutters left/right for moving images */}
       <section className="min-h-screen flex flex-col items-center justify-center text-center px-8 md:px-16">
         <div className="w-full max-w-3xl mx-auto flex flex-col items-center">
           <p className="hero-sub text-[#792CA2] font-medium tracking-wide mb-4">
@@ -236,8 +247,8 @@ export default function Home() {
             >
               See My Work
             </Link>
-            <a
-              href="mailto:maria.arssiely.delmundo@gmail.com"
+            
+             <a href="mailto:maria.arssiely.delmundo@gmail.com"
               className="border border-neutral-300 text-neutral-800 px-6 py-3 rounded-full hover:border-[#E05454] hover:text-[#E05454] transition-colors"
             >
               Get in Touch
@@ -275,7 +286,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROJECTS PREVIEW — pinned while cards reveal */}
+     
       <section
         ref={projectsSectionRef}
         id="work"
